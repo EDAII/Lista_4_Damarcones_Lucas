@@ -2,6 +2,9 @@ package utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import main.Main;
 import model.Oferta;
 import model.Pedido;
 import model.Solicitacao;
@@ -32,5 +35,21 @@ public class Application {
                 oferta.getPreco()
         );
         return pedido;
+    }
+     public static void printPedido(ArrayList<Solicitacao> solicitacoes, int i, Oferta oferta) {
+        System.out.printf("Cliente: %s , pediu  %s por R$ %d pela pizzaria %s\n",
+                solicitacoes.get(i).getNome(),
+                solicitacoes.get(i).getPizza(),
+                oferta.getPreco(),
+                oferta.getPizzaria()
+        );
+    }
+
+    public static void sleep() {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

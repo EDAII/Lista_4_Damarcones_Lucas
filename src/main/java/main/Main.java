@@ -7,9 +7,7 @@ package main;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.Oferta;
@@ -42,20 +40,11 @@ public class Main {
             Oferta oferta = Application.getOferta(custoBeneficio, solicitacoes, i);
 
             Pedido pedido = Application.doPedido(solicitacoes, i, oferta);
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            Application.sleep();
 
             try {
                 Comunicador.sendPOST(Gerador.pedidoJSON(pedido));
-                System.out.printf("Cliente: %s , pediu  %s por R$ %d pela pizzaria %s\n",
-                        solicitacoes.get(i).getNome(),
-                        solicitacoes.get(i).getPizza(),
-                        oferta.getPreco(),
-                        oferta.getPizzaria()
-                );
+                Application.printPedido(solicitacoes, i, oferta);
 
             } catch (IOException ex) {
                 Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
@@ -68,4 +57,6 @@ public class Main {
 //        
 //       
     }
+
+   
 }

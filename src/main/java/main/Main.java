@@ -15,6 +15,7 @@ import java.util.logging.Logger;
 import model.Oferta;
 import model.Pedido;
 import model.Solicitacao;
+import utils.Application;
 import utils.Comunicador;
 import utils.Gerador;
 import utils.Heap;
@@ -29,28 +30,18 @@ public class Main {
 
 //        Pizzas mais baratas
         System.out.println("Geração de catálogo de pizzas mais baratas");
-        for (String s : Gerador.pizzas) {
-            Oferta[] ofertas = Gerador.pizzariaPreco();
-            heap.sort(ofertas);
-            custoBeneficio.put(s, ofertas[0]);
-            System.out.printf("Pizza: %s, Pizzaria: %s, valor: %d\n", s, ofertas[0].getPizzaria(), ofertas[0].getPreco());
 
-        }
+        Application.geraCatologo(heap, custoBeneficio);
 
-        int QUANTIDADE = Gerador.random.nextInt(100);
+        int QUANTIDADE = Gerador.random.nextInt(1000);
         ArrayList<Solicitacao> solicitacoes = Gerador.pedidos(QUANTIDADE);
 
         System.out.println("\nRealizando as vendas de pizza\n");
         for (int i = 0; i < solicitacoes.size(); i++) {
-            
-            Oferta oferta = custoBeneficio.get(solicitacoes.get(i).getPizza());
-            
-            Pedido pedido = new Pedido(
-                    solicitacoes.get(i).getNome(),
-                    solicitacoes.get(i).getPizza(),
-                    oferta.getPizzaria(),
-                    oferta.getPreco()                    
-            );
+
+            Oferta oferta = Application.getOferta(custoBeneficio, solicitacoes, i);
+
+            Pedido pedido = Application.doPedido(solicitacoes, i, oferta);
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException ex) {
@@ -64,8 +55,8 @@ public class Main {
                         solicitacoes.get(i).getPizza(),
                         oferta.getPreco(),
                         oferta.getPizzaria()
-                        );
-               
+                );
+
             } catch (IOException ex) {
                 Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
             } catch (InterruptedException ex) {
